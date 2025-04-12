@@ -1,0 +1,125 @@
+BASE URLs
+==============================
+IIS          http://StoreDataServiceApi or https://StoreDataServiceApi
+IIS Express  http://localhost:7200 or https://localhost:44330
+HTTP.sys     http://localhost:5024 or https://localhost:44360
+
+==============================
+Request Data Using GET 
+==============================
+<base-url>/api/lookupcategories
+
+<base-url>/api/getproducts
+
+<base-url>/api/GetAllProductsByCategoryId/2
+
+
+>> Custom Model Binder Example 1 (binding to PagedProductListRequest object: You can still skip PaginationRequest[0] but need SortList[0] for simple query parameters.
+http://localhost:7200/api/getproductlist?ProductSearchField=CategoryID&ProductSearchText=3&PageIndex=0&PageSize=10&SortList[0]SortBy=ProductName&SortList[0]SortDirection=asc
+
+
+>> Custom Model Binder Example 2: New multiple-column sorting. 
+http://localhost:7200/api/getproductlist?ProductSearchFilter[0]ProductSearchField=CategoryID&ProductSearchFilter[0]ProductSearchText=2&PaginationRequest[0]PageIndex=0&PaginationRequest[0]PageSize=10&PaginationRequest[0]SortList[0]SortItem[0]SortBy=StatusDescription&PaginationRequest[0]SortList[0]SortItem[0]SortDirection=desc&PaginationRequest[0]SortList[1]SortItem[1]SortBy=ProductName&PaginationRequest[0]SortList[1]SortItem[1]SortDirection=asc
+
+
+>> For old GetProductsBySearchRequest model:
+http://localhost:7200/api/getallproducts?PageIndex=0&PageSize=5&SortBy=ProductName&SortDirection=ascending
+
+==================================
+Return Search Results Using POST
+==================================
+
+<base-url>/api/getpagedproductlist 
+<base-url>/api/getpagedproductlistbysp --Call Stored Procedure
+
+Input Json 1:
+{ 
+	"ProductSearchFilter": { 
+		"ProductSearchField": 0, 
+		"ProductSearchText": "3" 
+	},	
+	"StatusCode": 1, 
+	"PaginationRequest": { 
+		"PageIndex": 0, 
+		"PageSize": 10, 
+		"SortList": [ 
+		    {
+			    "SortBy": "StatusDescription", 
+			    "SortDirection": "desc" 
+			},
+			{
+			    "SortBy": "ProductName", 
+			    "SortDirection": "asc" 
+			} 
+		]  
+	} 
+}
+
+Input Json 2:
+---------------------------------
+With Date, Price, and Status filters
+---------------------------------
+{ 
+	"ProductSearchFilter": { 
+		"ProductSearchField": 0, 
+		"ProductSearchText": "3" 
+	}, 
+	"DateSearchFilter": { 
+		"SearchDateFrom": "01/01/2021", 
+		"SearchDateTo": "07/31/2024" 
+	}, 
+	"PriceSearchFilter": { 
+		"SearchPriceLow": "5", 
+		"SearchPriceHigh": "100" 
+	}, 
+	"StatusCode": 1, 
+	"PaginationRequest": { 
+		"PageIndex": 0, 
+		"PageSize": 10, 
+		"SortList": [
+            {
+                "SortBy": "AvailableSince", 
+                "SortDirection": "desc"
+            },
+			{
+			    "SortBy": "ProductName", 
+			    "SortDirection": "asc" 
+            }			 
+        ] 
+    } 
+}
+
+==================================
+Update a Product
+==================================
+Step 1 - check the product:
+<base-url>/api/products/13
+
+Step 2 - update (use POST):
+<base-url>/api/updateproduct
+
+Input Json:
+{ 
+	"CategoryId":	1,
+	"ProductId":	13,
+	"StatusCode":	1,
+	"UnitPrice":	14.79
+}
+
+Step 3 - check results by using Step 1 URL.
+
+	
+========================================
+More Test Cases for Custom Model Binder
+========================================
+Nested Collection
+-----------------
+<base-url>/api/nvpstonestcollectionget?CategoryId=3&PagingRequest[0]PageIndex=1&PagingRequest[0]PageSize=8&PagingRequest[0]Sort[0]SortBy=ProductName&PagingRequest[0]Sort[0]SortDirection=descending&PagingRequest[0]Sort[1]SortBy=CategoryID&PagingRequest[0]Sort[1]SortDirection=0&PagingRequest[1]PageIndex=2&PagingRequest[1]PageSize=5&PagingRequest[1]Sort[0]SortBy=CategoryID&PagingRequest[1]Sort[0]SortDirection=0&PagingRequest[1]Sort[1]SortBy=ProductName&PagingRequest[1]Sort[1]SortDirection=Descending&Test=OK
+
+Nested String Arrays
+--------------------
+<base-url>/api/stringlistorarrayget?PageIndex=1&PageSize=8&RootStrings[0]=OK&RootStrings[1]=Yes&RootStrings[2]=456&Sort2[0]SortBy=ProductName&Sort2[0]SortDirection=descending&Sort2[0]InStrings[0]=Search&Sort2[0]InStrings[1]=Find&Sort2[1]SortBy=CategoryID&Sort2[1]SortDirection=0&Sort2[1]InStrings[0]=Here&Sort2[1]InStrings[1]=Also
+
+
+	
+	

@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "startup.html",
+      "applicationUrl": "http://localhost:5024",
+      "applicationUrl-enableForHTTPS": "https://localhost:44360",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "LOCAL"
+      }
+    }
+  },
+  "$schema": "http://json.schemastore.org/launchsettings.json"  
+}
